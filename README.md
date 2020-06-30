@@ -11,3 +11,6 @@
 ---
 
 
+## 活动情况
+
+- 06/30/2020 ： 学习Django框架，并且写了一个miniproj，具体请见[链接](https://github.com/wang-sy/CQUSoftwareTraining2020/tree/master/MiniProj1)
