@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page - A starter Web Project</title>
+</head>
+<body>
+    <div>
+        <form action="/set-board-message" method="POST">
+            {%csrf_token%}
+            <input hidden name="type" value="admin"/>
+            <input hidden name="auth" value="123"/>
+            <textarea name="boardMessage">
+
+            </textarea>
+            <div>
+                <button type="submit">提交</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
