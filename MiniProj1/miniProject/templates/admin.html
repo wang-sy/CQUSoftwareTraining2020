@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>admin</title>
+</head>
+<body>
+
+<div>
+    <form action="{% url 'admin_changed' %}" method="post">
+        {% csrf_token %}
+        <label for="new_message">更新的消息：</label>
+        <input id="new_message" type="text" name="new_message" value="{{ new_message }}"><br />
+        <input type="submit" value="提交">
+    </form>
+</div>
+
+</body>
+</html>
