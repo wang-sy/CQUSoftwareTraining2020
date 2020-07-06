@@ -169,5 +169,7 @@
 <style scoped>
   .profile_style{
     font-size: 18px;
+    background-color: #B3D0D8;
+    margin-bottom: auto;
   }
 </style>
