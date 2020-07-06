@@ -8,11 +8,6 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      name:'home',
-      path: '/',
-      redirect:'/main'
-    },
-    {
       name:'loginPlusRegister',
       path:'/login',
       component:LoginPlusRegister

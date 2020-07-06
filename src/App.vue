@@ -15,8 +15,15 @@ export default {
     LoginPlusRegister
   },
   data() {
+    // 展示商品的的表单
+    const item = {
+      pic: '^-^',
+      name: '123家政',
+      price: '￥1000'
+    };
     return {
-
+      input: '',
+      tableData: Array(20).fill(item)
     }
   }
 }
