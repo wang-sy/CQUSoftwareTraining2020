@@ -8,11 +8,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Axios from 'axios'
 Vue.config.productionTip = false
 
-// let globalAxiosInstance = Axios.create({
-//   baseURL:'http://219.221.106.4:8080'
-// });
-//请求
-// Vue.prototype.$axios = globalAxiosInstance;
+let globalAxiosInstance = Axios.create({
+  baseURL:'http://219.221.106.4:8080'
+});
+// 请求
+Vue.prototype.$axios = globalAxiosInstance;
 
 //全局通用错误处理
 Vue.prototype.$parseError = (error) => {
