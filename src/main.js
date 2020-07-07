@@ -9,7 +9,7 @@ import Axios from 'axios'
 Vue.config.productionTip = false
 
 let globalAxiosInstance = Axios.create({
-  baseURL:'http://219.221.106.4:8080'
+  baseURL:'http://www.wangsaiyu.cn:20001'
 });
 // 请求
 Vue.prototype.$axios = globalAxiosInstance;

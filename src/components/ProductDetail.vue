@@ -5,7 +5,7 @@
         <el-header class="header">
           <el-row type="flex" justify="space-between">
             <div class="header_font">
-              {{class_type_header}}
+              {{computed_header}}
             </div>
             <login-plus-register></login-plus-register>
           </el-row>
@@ -15,9 +15,10 @@
           <el-container>
   <!--          main上的图片使用aside-->
             <el-aside width="40%">
-              <el-carousel indicator indicator-position="outside">
-                <el-carousel-item v-for="productImg in productSelections" :key="productImg.product_id">
-                  <h3>{{productImg.product_name}}</h3>
+              <el-carousel indicator indicator-position="outside" height="512px" :autoplay="false" ref="carousel">
+                <el-carousel-item v-for="productImg in server_response.sku_list" :key="productImg.sku_id"
+                                  :name="productImg.sku_name">
+                  <el-image :src="productImg.sku_figure_url"/>
                 </el-carousel-item>
               </el-carousel>
             </el-aside>
@@ -41,10 +42,11 @@
                     <el-form-item label="服务">
                       <el-radio-group v-model="productForm.serviceName">
                         <el-tooltip effect="dark" content="该服务售罄" placement="top"
-                                    v-for="productSelection in productSelections"
-                                    :key="productSelection.product_id"
-                                    :disabled="productSelection.isValidProductState">
-                          <el-radio border :label="productSelection.product_name" :disabled="!productSelection.isValidProductState"></el-radio>
+                                    v-for="productSelection in server_response.sku_list"
+                                    :key="productSelection.sku_id"
+                                    :disabled="productSelection.sku_is_valid">
+                          <el-radio border :label="productSelection.sku_name" :disabled="!productSelection.sku_is_valid"
+                          @change="setActiveItem(productSelection.sku_name)"></el-radio>
                         </el-tooltip>
                       </el-radio-group>
                     </el-form-item>
@@ -72,8 +74,8 @@
                     </div>
 
                     <div class="buyButtonSection medium_margin_top">
-                      <el-button icon="el-icon-shopping-bag-2">立即购买</el-button>
-                      <el-button icon="el-icon-shopping-cart-2">加入购物车</el-button>
+                      <el-button type="primary" icon="el-icon-shopping-bag-2">立即购买</el-button>
+                      <el-button type="primary" icon="el-icon-shopping-cart-2">加入购物车</el-button>
                     </div>
                   </el-form>
                 </div>
@@ -85,10 +87,10 @@
               <div class="product_intro">
                 <h3>商品详情</h3>
                 <h4 class="short_margin_top">
-                  {{service_intro}}
+                  {{server_response.spu_long_introduction}}
                 </h4>
-                <div class="footer_image" v-for="img in imgList" :key="img.order">
-                  <img :src="img.src"/>
+                <div class="footer_image" v-for="img in server_response.img_list" :key="img.order">
+                  <el-image :src="img.spu_main_figure_url"/>
                 </div>
               </div>
             </el-main>
@@ -110,52 +112,33 @@
       components: {LoginPlusRegister},
       data() {
         return {
-          class_type_header:'种类名称（例如月嫂聘用）',
-          min_product_price: '最低服务价格',
-          service_intro: '大段文字简介',
-          imgList:[
-            {
-              src: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-              order: 1
-            },
-            {
-              src: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-              order: 2
-            },
-            {
-              src: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-              order: 3
-            }
-          ],
-          productSelections: [
-            {
-              product_id: '1',
-              product_name: '高级月嫂',
-              product_unit_price: '500000',
-              product_unit: '年',
-              product_short_intro: '买了就赚',
-              isValidProductState: false,
-              sale_amount: 15
-            },
-            {
-              product_id: '2',
-              product_name: '初级月嫂',
-              product_unit_price: '250000',
-              product_unit: '年',
-              product_short_intro: '这么便宜的月嫂？？',
-              isValidProductState: true,
-              sale_amount: 125
-            },
-            {
-              product_id: '3',
-              product_name: '低级月嫂',
-              product_unit_price: '150000',
-              product_unit: '年',
-              product_short_intro: '单个服务的简介',
-              isValidProductState: true,
-              sale_amount: 135
-            }
-          ],
+          server_response: {
+            class_name: '',
+            img_list:[
+              {
+                spu_main_figure_url:'',
+                spu_figure_rank:1
+              }
+            ],
+            sku_list:[
+              {
+                sku_figure_url:'',
+                sku_id:1,
+                sku_is_valid:true,
+                sku_name:'',
+                sku_short_introduction:'',
+                sku_unit:'',
+                sku_unit_price:''
+              }
+            ],
+            spu_highest_price:200,
+            spu_id:1,
+            spu_is_valid:true,
+            spu_long_introduction:'',
+            spu_lowest_price:100,
+            spu_name:'',
+            spu_short_introduction:''
+          },
           productForm: {
             serviceName:'',
             total_pay_amount:'',
@@ -165,11 +148,23 @@
         }
       },
       mounted() {
-        this.productId = this.$route.params.productId;
+        this.productId = this.$route.params.productID;
+        let url = "/Product/";
+        let that = this;
+        this.$axios.get(url,{
+          params:{
+            product_get_format: '2',
+            product_spu_id: this.productId
+          }
+        }).then(res => {
+          if (res.status >= 200 && res.status < 300) {
+            that.server_response = res.data;
+          }
+        })
       },
     methods: {
       getCurrentSelectedTarget() {
-        return this.productSelections.find(product => product.product_name === this.productForm.serviceName);
+        return this.server_response.sku_list.find(product => product.sku_name === this.productForm.serviceName);
       },
       handleNumChange(currentValue) {
         //todo 查库存
@@ -182,6 +177,10 @@
         }
         return ans;
       },
+      setActiveItem(serviceName) {
+        console.log(serviceName);
+        this.$refs.carousel.setActiveItem(serviceName);
+      }
     },
     computed: {
         computed_product_name() {
@@ -191,7 +190,7 @@
           let target = this.getCurrentSelectedTarget();
           let ans = '';
           if (target !== undefined) {
-            ans = target.product_unit_price + "/" + target.product_unit;
+            ans = target.sku_unit_price + "/" + target.sku_unit;
           }
           return ans;
         },
@@ -200,11 +199,19 @@
           let ans = '';
           //todo 不这样做，服务器计算完了返回总的价格
           if (target !== undefined) {
-            ans = (parseFloat(target.product_unit_price) * parseInt(this.productForm.num)).toFixed(2);
+            ans = (parseFloat(target.sku_unit_price) * parseInt(this.productForm.num)).toFixed(2);
           }else {
             ans = '0';
           }
           return ans + "元";
+        },
+        computed_header() {
+          let target = this.getCurrentSelectedTarget();
+          let ans = this.server_response.class_name;
+          if (target !== undefined) {
+            ans += ">>" + target.sku_name;
+          }
+          return ans;
         }
     }
   }
