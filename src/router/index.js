@@ -6,6 +6,10 @@ import housekeeping from '../components/housekeeping'
 import LoginPlusRegister from "../components/LoginPlusRegister";
 import ProductDetail from "../components/ProductDetail";
 import Main from "../components/Main";
+<<<<<<< HEAD
+=======
+import Data from "../components/Data";
+>>>>>>> a7bfab21a565f2e08188dc529b362e74e2bf0902
 Vue.use(Router)
 
 export default new Router({
@@ -52,6 +56,14 @@ export default new Router({
       name: 'productDetail',
       path: '/product/detail/:productID',
       component: ProductDetail
+<<<<<<< HEAD
+=======
+    },
+    {
+      path:'/PayPage',
+      name:'PayPage',
+      component: Data,
+>>>>>>> a7bfab21a565f2e08188dc529b362e74e2bf0902
     }
   ]
 })
