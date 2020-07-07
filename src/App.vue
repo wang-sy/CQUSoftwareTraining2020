@@ -1,12 +1,29 @@
-<template>
+<<<<<<< HEAD
+c<template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
+
+<script>
+
+
+export default {
+  name: 'App',
+    data(){
+      return{
+          data:[]
+      }
+    },
+  computed: {
+
+  },
+    methods:{
+
+    }
+
+}
+</script>
 
 <style>
 #app {
@@ -15,18 +32,38 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  margin-top: 60px;
 }
 </style>
+=======
+<template>
+  <div id="app">
+    <router-view/>
+  </div>
+</template>
+<style>
+  .el-header {
+    background-color: #B3D0D8;
+    color: #333;
+    /*line-height: 60px;*/
+  }
+
+  .el-aside {
+    color: #333;
+  }
+
+  .inline-block {
+    display: inline-block;
+  }
+</style>
+<script>
+  export default {
+    name: "Main",
+    data() {
+      return {
+
+      }
+    }
+  }
+</script>
+>>>>>>> b8a8edf37fab3d901b79ea62dcaffc5b4ac97360
