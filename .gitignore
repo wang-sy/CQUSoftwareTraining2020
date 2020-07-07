@@ -1,5 +1,4 @@
 .DS_Store
-<<<<<<< HEAD
 node_modules/
 /dist/
 npm-debug.log*
@@ -12,9 +11,6 @@ config/
 .postcssrc.js
 .idea/
 
-=======
-node_modules
-public
 .browserslistrc
 babel.config.js
 package-lock.json
@@ -30,7 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 package.json
->>>>>>> a7bfab21a565f2e08188dc529b362e74e2bf0902
 
 # Editor directories and files
 .idea
@@ -39,7 +34,8 @@ package.json
 *.ntvs*
 *.njsproj
 *.sln
-<<<<<<< HEAD
-=======
 *.sw?
->>>>>>> a7bfab21a565f2e08188dc529b362e74e2bf0902
+
+public
+static
+index.html
