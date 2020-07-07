@@ -61,7 +61,9 @@
                     <el-form-item class="short_margin_top">
                       <span class="buyAmount">购买数量:
                       </span>
-                      <el-input-number v-model="productForm.num" @change="handleNumChange" :min="1" :max="100" label="服务数量"></el-input-number>
+                      <el-input-number v-model="productForm.num" @change="handleNumChange" :min="1" :max="100" label="服务数量">
+
+                      </el-input-number>
                     </el-form-item>
 
                     <div class="purchase_summary short_margin_top" style="padding-top: 1px; padding-left: 1px">
@@ -178,7 +180,6 @@
         return ans;
       },
       setActiveItem(serviceName) {
-        console.log(serviceName);
         this.$refs.carousel.setActiveItem(serviceName);
       }
     },
