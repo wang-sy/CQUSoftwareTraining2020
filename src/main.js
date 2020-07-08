@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Axios from 'axios'
 import VueAreaLinkage from 'vue-area-linkage';
 import router from './router/index';
+import store from './store'
 let globalAxiosInstance = Axios.create({
   baseURL:'http://www.wangsaiyu.cn:20001'
 });
@@ -24,5 +25,6 @@ Vue.use(ElementUI);
 /* eslint-disable no-new */
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount("#app")

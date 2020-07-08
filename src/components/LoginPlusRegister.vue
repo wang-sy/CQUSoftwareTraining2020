@@ -1,6 +1,6 @@
 <template>
-  <div id="loginTemplate">
-    <el-row>
+  <div id="loginTemplate" style="height: 35px;">
+    <el-row style="height: 60px;text-align: right;">
       <el-col :span="2">
         <el-button type="text" @click="popUpLoginForm" icon="el-icon-user-solid" class="profile_style">
           登录/注册
@@ -170,6 +170,6 @@
   .profile_style{
     font-size: 18px;
     /*background-color: #B3D0D8;*/
-    margin-bottom: auto;
+    /*margin-bottom: auto;*/
   }
 </style>

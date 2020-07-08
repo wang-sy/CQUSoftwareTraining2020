@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <router-view/>
-    <shopping-cart class="cart"></shopping-cart>
   </div>
 </template>
 <style>
@@ -21,8 +20,6 @@
   }
 </style>
 <script>
-  import ShoppingCart from "./components/ShoppingCart";
   export default {
-    components: {ShoppingCart}
   }
 </script>
