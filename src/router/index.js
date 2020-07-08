@@ -67,7 +67,7 @@ export default new Router({
       component: User,
       children: [
         {
-          path: 'revise/:field',
+          path: 'revise',
           component: UserInfoRevise
         }
       ]

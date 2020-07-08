@@ -4,7 +4,7 @@
     </el-button>
     <el-drawer
         :visible.sync="isCartShow"
-        size="36%">
+        size="36%" :modal="false">
       <el-table :data="cartData">
         <el-table-column prop="pic" label="    " min-width="80%">
         </el-table-column>
@@ -24,6 +24,11 @@
     export default {
         name: "ShoppingCart",
         data: function() {
+          const item = {
+            pic : '',
+            name : 'a',
+            price : 123
+          }
           return {
             isCartShow: false,
             cartData: Array(10).fill(item)
@@ -46,6 +51,6 @@
 
 <style scoped>
   .el-drawer {
-    background-color: coral;
+    /*background-color: coral;*/
   }
 </style>

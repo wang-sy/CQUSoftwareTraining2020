@@ -31,7 +31,7 @@
       </el-header>
       <el-main class="user_main_container">
         <div id="user_left">
-          <el-menu default-active="1">
+          <el-menu @select="logWhatever">
             <el-submenu index="1">
               <template slot="title">
                 <i class="el-icon-user-solid">
@@ -40,10 +40,10 @@
               </template>
               <el-menu-item-group>
                 <template slot="title">用户信息查询与修改</template>
-                <el-menu-item index="1-1">用户名</el-menu-item>
-                <el-menu-item index="1-2">密码</el-menu-item>
-                <el-menu-item index="1-3">邮箱</el-menu-item>
-                <el-menu-item index="1-4">管理员状态申请</el-menu-item>
+                <el-menu-item index="1">用户名</el-menu-item>
+                <el-menu-item index="2">密码</el-menu-item>
+                <el-menu-item index="3">邮箱</el-menu-item>
+                <el-menu-item index="4">管理员状态申请</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="2">
@@ -53,13 +53,13 @@
                 </i>
               </template>
               <el-menu-item-group>
-                <el-menu-item>地址信息查询修改</el-menu-item>
+                <el-menu-item index="5">地址信息查询修改</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
         </div>
         <div id="user_right">
-          <UserInfoRevise></UserInfoRevise>
+          <UserInfoRevise :revise_type="revise_type" :user_info="this.server_resp"></UserInfoRevise>
         </div>
       </el-main>
     </el-container>
@@ -73,14 +73,26 @@
       components: {UserInfoRevise},
       data() {
         return {
+          user_id: '1',
+          revise_type: 'undefined',
           server_resp: {
             user_phone_number:'',
             user_name: '我是用户名',
             user_email: '763858741@qq.com',
             user_password: '',
             user_is_admin: ''
-          }
+          },
+          routeArray:['username','password','email','admin','address']
         }
+      },
+      methods: {
+        logWhatever(index) {
+          this.revise_type = this.routeArray[index - '1'];
+          // this.$router.push("/user/" + this.user_id + "/revise");
+        }
+      },
+      mounted() {
+        this.user_id = this.$route.params.userId;
       }
     }
 </script>

@@ -10,9 +10,9 @@
           <label style="color: #B3D0D8">____________________________</label>
           <el-input style="text-align: left; width: 1000px;" v-model="input" placeholder="请输入服务名"></el-input>
           <el-button type="primary">搜索</el-button>
-          <label style="color: #B3D0D8">________________________</label>
-          <shopping-cart style="display:inline-block; text-align: center; font-size: 100%"></shopping-cart>
-          <label style="color: #B3D0D8">____________</label>
+<!--          <label style="color: #B3D0D8">________________________</label>-->
+<!--          <shopping-cart style="display:inline-block; text-align: center; font-size: 100%"></shopping-cart>-->
+<!--          <label style="color: #B3D0D8">____________</label>-->
           <login-plus-register style="display:inline-block; text-align: center"></login-plus-register>
           <!--        <el-dropdown>-->
           <!--          <i class="el-icon-setting" style="margin-right: 15px"></i>-->
@@ -107,7 +107,6 @@
             a = res.data;
           }
         });
-        alert(a)
       }
 
     }
