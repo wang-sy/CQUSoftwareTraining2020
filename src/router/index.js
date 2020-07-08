@@ -7,6 +7,8 @@ import LoginPlusRegister from "../components/LoginPlusRegister";
 import ProductDetail from "../components/ProductDetail";
 import Main from "../components/Main";
 import Data from "../components/Data";
+import User from "../components/User";
+import UserInfoRevise from "../components/UserInfoRevise";
 Vue.use(Router)
 
 export default new Router({
@@ -58,6 +60,17 @@ export default new Router({
       path:'/PayPage',
       name:'PayPage',
       component: Data,
+    },
+    {
+      name: 'user',
+      path: '/user/:userId',
+      component: User,
+      children: [
+        {
+          path: 'revise/:field',
+          component: UserInfoRevise
+        }
+      ]
     }
   ]
 })
