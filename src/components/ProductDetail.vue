@@ -77,7 +77,7 @@
 
                     <div class="buyButtonSection medium_margin_top">
                       <el-button type="primary" icon="el-icon-shopping-bag-2">立即购买</el-button>
-                      <el-button type="primary" icon="el-icon-shopping-cart-2">加入购物车</el-button>
+                      <el-button type="primary" icon="el-icon-shopping-cart-2" @click="addToCart" ref="cart">加入购物车</el-button>
                     </div>
                   </el-form>
                 </div>
@@ -181,6 +181,10 @@
       },
       setActiveItem(serviceName) {
         this.$refs.carousel.setActiveItem(serviceName);
+      },
+      addToCart() {
+        let current = this.getCurrentSelectedTarget();
+        this.$refs.cart.addItemToCart(current.sku_id, this.productForm.num);
       }
     },
     computed: {

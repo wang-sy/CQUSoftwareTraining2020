@@ -108,15 +108,15 @@
           doLoginProcess() {
             this.isLoginProcessActivated = true;
             let that = this;
-            let uri = '/users/';
+            let uri = '/User/';
             this.$axios.post(uri, this.loginForm).then(res => {
               if (res.status >= 200 && res.status <= 300) {
-                let loginStatus = res.data.login_status;
-                console.log(loginStatus);
-                if (res.data.loginStatus === 0) {
+                let loginStatus = res.data.login_access;
+                let tokenId = res.data.token;
+                if (loginStatus === 1) {
                   that.$message.success("欢迎您！登录成功！");
-                  //todo 登录成功后将状态加到vuex
-                }else if (loginStatus === 1){
+                  that.$store.commit('updateLoginToken',tokenId);
+                }else if (loginStatus === 0){
                   that.$message.error("用户名或者密码错误");
                 }else {
                   throw new Error(JSON.stringify({
