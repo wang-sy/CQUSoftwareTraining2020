@@ -20,7 +20,8 @@
 
     <!--    登录/注册drawer-->
     <el-drawer
-      :visible.sync="isLoginDrawerShow && !this.$store.getters.isLogin"
+      v-if="!$store.getters.isLogin"
+      :visible.sync="isLoginDrawerShow"
       size="36%">
       <el-tabs type="card">
         <el-tab-pane label="登录" name="login">

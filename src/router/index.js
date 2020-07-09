@@ -57,7 +57,7 @@ export default new Router({
       component: ProductDetail
     },
     {
-      path:'/PayPage',
+      path:'/PayPage/:orderId',
       name:'PayPage',
       component: Data,
     },
