@@ -322,6 +322,11 @@
                     i++;
                     that.orderPrice=that.orderPrice+item.sku_total_price;
                 }
+                if(object.data.order_is_payed == true){
+                    this.orderState="订单已支付";
+                    this.payButtonState= true;
+                    this.addressButtonState = true;
+                }
             });
 
 
