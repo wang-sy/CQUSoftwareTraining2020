@@ -303,6 +303,7 @@
 
 
             //根据订单号获取订单信息
+
             this.$axios.post(this.orderUrl, {
                 request_type: 2,
                 order_id: Number(that.orderID),
@@ -323,9 +324,16 @@
                     that.orderPrice=that.orderPrice+item.sku_total_price;
                 }
                 if(object.data.order_is_payed == true){
-                    this.orderState="订单已支付";
-                    this.payButtonState= true;
-                    this.addressButtonState = true;
+
+                    console.log(object.data.order_pay_method );
+                    if(object.data.order_pay_method ==  "支付宝")  that.orderPayWay=1;
+                    else if(object.data.order_pay_method ==  "微信")  that.orderPayWay=0;
+                    else if(object.data.order_pay_method ==  "银行卡") that.orderPayWay=2;
+
+                    that.orderPayWayState=true;
+                    that.orderState="订单已支付";
+                    that.payButtonState= true;
+                    that.addressButtonState = true;
                 }
             });
 
@@ -417,69 +425,75 @@
 
 
             //点击确认支付按钮，把服务地址和支付方式传给后端，并获取是否成功的信息。
-            pay(){
+            pay() {
 
-                let  index;
-                let  need_address;
+                if (this.address == "") {
+                    this.$message({
+                        message: '请选择收货地址',
+                        type: 'warning'
+                    });
+                } else {
 
-                for(let item of this.showADDRESS){
 
-                    if(item.address === this.address){
-                        index=item.id;
+                    let index;
+                    let need_address;
+                    for (let item of this.showADDRESS) {
+
+                        if (item.address === this.address) {
+                            index = item.id;
+                        }
                     }
+
+                    for (let item of this.ADDRESS) {
+                        if (index === item.id) {
+                            need_address = item.address;
+                        }
+                    }
+
+
+                    //向服务器请求是否支付成功
+                    let that = this;
+                    let pay_method;
+                    if (that.orderPayWay == 0) pay_method = "微信";
+                    else if (that.orderPayWay == 1) pay_method = "支付宝";
+                    else if (that.orderPayWay == 2) pay_method = "银行卡";
+                    this.$axios.post(
+                        this.orderUrl,
+                        {
+                            request_type: 3,
+                            order_id: (Number)(that.orderID),
+                            user_id: that.userID,
+                            address_province: need_address.address_province,
+                            address_city: need_address.address_city,
+                            address_district: need_address.address_district,
+                            address_description: need_address.address_details,
+                            address_costume_name: need_address.customer_name,
+                            address_costume_phone_number: need_address.customer_phone_number,
+                            order_pay_method: pay_method,
+                        }
+                    ).then(function (object) {
+                        let is_pay = object.data.change_ok;
+                        if (is_pay == 1) {
+                            that.orderPayWayState = true;
+                            that.orderState = "订单已支付";
+                            that.payFormVisible = false;
+                            that.$message({
+                                message: '恭喜你，支付成功！',
+                                type: 'success'
+                            });
+                            that.payButtonState = true;
+                            that.addressButtonState = true;
+                            setTimeout(() => {
+                                that.$router.push({
+                                    name: 'main'
+                                })
+                            }, 3000);
+                        } else {
+                            that.payFormVisible = false;
+                            that.$message.error('支付失败！');
+                        }
+                    });
                 }
-
-                for(let item of this.ADDRESS){
-                    if(index === item.id){
-                        need_address=item.address;
-                    }
-                }
-
-
-
-                //向服务器请求是否支付成功
-                let that=this;
-                let pay_method;
-                if(that.orderPayWay == 0)   pay_method="微信";
-                else if(that.orderPayWay == 1)  pay_method="支付宝";
-                else if(that.orderPayWay == 2)  pay_method="银行卡";
-                this.$axios.post(
-                    this.orderUrl,
-                    {
-                        request_type:3,
-                        order_id:(Number)(that.orderID),
-                        user_id:that.userID,
-                        address_province:need_address.address_province,
-                        address_city:need_address.address_city,
-                        address_district:need_address.address_district,
-                        address_description:need_address.address_details,
-                        address_costume_name:need_address.customer_name,
-                        address_costume_phone_number:need_address.customer_phone_number,
-                        order_pay_method:pay_method,
-                    }
-                ).then(function(object) {
-                    let is_pay = object.data.change_ok;
-                    if(is_pay == 1){
-                        that.orderPayWayState = true;
-                        that.orderState = "订单已支付";
-                        that.payFormVisible=false;
-                        that.$message({
-                            message: '恭喜你，支付成功！',
-                            type: 'success'
-                        });
-                        that.payButtonState= true;
-                        that.addressButtonState = true;
-                        setTimeout(() =>{
-                            that.$router.push({
-                                name:'main'
-                            })
-                        },3000);
-                    }
-                    else{
-                        that.payFormVisible=false;
-                        that.$message.error('支付失败！');
-                    }
-                 });
             }
         },
 

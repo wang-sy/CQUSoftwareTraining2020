@@ -21,11 +21,22 @@
             <span>{{scope.row.price}}</span>
           </template>
         </el-table-column>
-          <el-table-column>
+        <el-table-column prop="number" label="数量">
             <template slot-scope="scope">
-              <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <span>{{scope.row.number}}</span>
             </template>
-          </el-table-column>
+        </el-table-column>
+        <el-table-column>
+            <template slot-scope="scope">
+              <el-button class="num" @click="handleAdd(scope.$index, scope.row)">+</el-button>
+              <el-button class="num" @click="handleMinus(scope.$index, scope.row)">-</el-button>
+            </template>
+        </el-table-column>
+        <el-table-column>
+           <template slot-scope="scope">
+             <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+           </template>
+        </el-table-column>
       </el-table>
     </el-drawer>
   </div>
@@ -77,6 +88,27 @@
               message: '已取消删除'
             });
           });
+        },
+        handleAdd(index, row) {
+          const item = {
+          number: parseInt(row.number)+1,
+          spu_name: row.spu_name,
+          spu_figure_url: row.spu_figure_url,
+          spu_id: row.spu_id,
+          price: row.price
+          };
+          this.cartData.splice(index, 1, item)
+        },
+        handleMinus(index, row) {
+          const item = {
+            number: parseInt(row.number)-1,
+            spu_name: row.spu_name,
+            spu_figure_url: row.spu_figure_url,
+            spu_id: row.spu_id,
+            price: row.price
+          };
+          if(item.number < 0) item.number = 0
+          this.cartData.splice(index, 1, item)
         }
     }
   }
@@ -85,5 +117,9 @@
 <style scoped>
   .el-drawer {
     background-color: coral;
+  }
+  .num {
+    size: 5px;
+    font-size: 15px;
   }
 </style>
