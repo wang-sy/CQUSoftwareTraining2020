@@ -45,7 +45,7 @@
         <el-tab-pane label="注册" name="register">
           <el-form :model="registerForm" label-width="128px">
             <el-form-item label="用户名">
-              <el-input v-model="registerForm.user_nickname">
+              <el-input v-model="registerForm.user_nick_name">
 
               </el-input>
             </el-form-item>
@@ -59,8 +59,8 @@
 
               </el-input>
             </el-form-item>
-            <el-form-item label="手机号" :rules="phoneRules" prop="user_phonenumber">
-              <el-input v-model="registerForm.user_phonenumber">
+            <el-form-item label="手机号" :rules="phoneRules" prop="user_phone_number">
+              <el-input v-model="registerForm.user_phone_number">
 
               </el-input>
             </el-form-item>
@@ -95,10 +95,10 @@
               request_type:2
             } ,
             registerForm: {
-              user_nickname:'',
+              user_nick_name:'',
               user_password:'',
               user_email:'',
-              user_phonenumber:'',
+              user_phone_number:'',
               request_type:1
             },
             isLoginDrawerShow: false,
@@ -133,7 +133,10 @@
                     }
                   }).then(res => {
                     //获取邮箱
-                    user.user_email = res.data.user_email;
+                    user = Object.assign({}, user, {
+                      user_email: res.data.user_email,
+                      user_phone_number: res.data.user_phone_number
+                    });
                     that.$store.commit('updateUser', user);
                   });
                 }else if (loginStatus === 0){
@@ -156,13 +159,30 @@
           },
           doRegisterProcess() {
             this.isRegisterProcessActivated = true;
-            let uri = '/users/';
+            let uri = '/User/';
             let that = this;
             this.$axios.post(uri,this.registerForm).then(res => {
-              let retCode = res.data.registration_status;
-              if (retCode === 0) {
+              let retCode = res.data.create_access;
+              let store = {
+                tokenId: res.data.token
+              };
+              if (retCode === 1) {
                 that.$message.success("注册成功！");
-              }else if (retCode === 1) {
+                //现在用token获取用户信息，自动登录
+                that.$axios.get('/User/', {
+                  params: {
+                    token: res.data.token
+                  }
+                }).then(res => {
+                  let data = res.data;
+                  that.$store.commit('updateUser', Object.assign({}, store, {
+                    user_email: data.user_email,
+                    user_is_admin: data.user_is_admin,
+                    user_name: data.user_name,
+                    user_phone_number: data.user_phone_number
+                  }));
+                })
+              }else if (retCode === 0) {
                 //todo 不使用message,直接将手机input框标红
                 that.$message.error("手机号码不唯一");
               }else if (retCode === 2) {

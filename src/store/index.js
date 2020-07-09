@@ -28,7 +28,6 @@ const store=new Vuex.Store({
   // 实时监听state值的变化
   getters: {
     getUser: state => {
-      console.log(JSON.parse(localStorage.getItem('user')))
       return state.user.isLogin !== undefined && state.user.isLogin ? state.user :
         JSON.parse(localStorage.getItem('user'));
     },
@@ -68,7 +67,6 @@ const store=new Vuex.Store({
   // 改变state里的初始值 同步的
   mutations: {
     updateUser(state, server_resp_user) {
-      console.log(server_resp_user);
       state.user = server_resp_user;
       state.user.isLogin = true;
       state.tokenId = server_resp_user.tokenId;
