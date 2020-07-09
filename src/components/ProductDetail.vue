@@ -77,7 +77,7 @@
 
                     <div class="buyButtonSection medium_margin_top">
                       <el-button type="primary" icon="el-icon-shopping-bag-2" @click="buyNow">立即购买</el-button>
-                      <el-button type="primary" icon="el-icon-shopping-cart-2" @click="addToCart" ref="cart">加入购物车</el-button>
+                      <el-button type="primary" icon="el-icon-shopping-cart-2" @click="addToCart">加入购物车</el-button>
                     </div>
                   </el-form>
                 </div>
@@ -184,7 +184,8 @@
       },
       addToCart() {
         let current = this.getCurrentSelectedTarget();
-        this.$refs.cart.addItemToCart(current.sku_id, this.productForm.num);
+        current.incr = this.productForm.num;
+        this.$store.commit('addItemToCart', current);
       },
       buyNow() {
         let currentSkuId = this.getCurrentSelectedTarget().sku_id;

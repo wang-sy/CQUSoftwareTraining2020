@@ -10,6 +10,7 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
               <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="gotoMainPage">Home</el-dropdown-item>
                 <el-dropdown-item command="gotoUserProfile">个人主页</el-dropdown-item>
                 <el-dropdown-item command="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
@@ -210,8 +211,10 @@
           dropDownParser(command) {
             if (command === 'logout') {
               this.logout();
-            }else {
+            }else if (command === 'gotoUserProfile'){
               this.$router.push("/user/" + this.$store.getters.getToken);
+            }else {
+              this.$router.replace('/');
             }
           },
         },

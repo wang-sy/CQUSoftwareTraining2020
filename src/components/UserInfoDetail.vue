@@ -37,18 +37,19 @@
         </el-form>
       </div>
       <div v-else-if="revise_type === 'history_orders'">
-        <el-table :data="history_order_list" border :tree-props="{children:'sub_order_list', hasChildren:true}" row-key="real_order_id">
-          <el-table-column prop="order_id" label="订单ID/商品名称" width="400"></el-table-column>
-          <el-table-column prop="order_create_time_number_str" label="订单日期" width="200" sort-by="order_create_time_number">
+        <el-table :data="history_order_list" border :tree-props="{children:'sub_order_list', hasChildren:true}"
+                  row-key="real_order_id" height="333" style="margin-top: 16px;width: 100%">
+          <el-table-column prop="order_id" label="订单ID/商品名称" width="300"></el-table-column>
+          <el-table-column prop="order_create_time_number_str" label="订单日期" width="333" sort-by="order_create_time_number">
 
           </el-table-column>
-          <el-table-column prop="order_pay_method" label="支付方式" width="180">
+          <el-table-column prop="order_pay_method" label="支付方式" width="150">
             <template slot-scope="scope">
               <el-button type="danger" v-if="!scope.row.order_is_payed" @click="gotoPayment(scope.row.real_order_id)">前往支付</el-button>
               <span v-else>{{scope.row.order_pay_method}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="order_total_price" label="订单支付金额" width="120">
+          <el-table-column prop="order_total_price" label="订单支付金额" width="130">
             <template slot-scope="scope">
               <span v-if="!scope.row.order_is_payed">暂未支付</span>
               <span v-else>{{scope.row.order_total_price}}元</span>
@@ -136,7 +137,6 @@
                   token: that.$store.getters.getToken
                 }
               }).then(result => {
-                console.log({user_name:result.data.user_name, tokenId:that.$store.getters.getToken});
                 that.$store.commit('updateUser', {user_name:result.data.user_name,
                   tokenId:that.$store.getters.getToken, user_email: result.data.user_email});
               })
@@ -191,5 +191,19 @@
   .submit_btn {
     display: flex;
     justify-content: center;
+  }
+  .el-table::-webkit-scrollbar {
+    width: 4px;
+    /*height: 4px;*/
+  }
+  .el-table::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+  }
+  .el-table::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
   }
 </style>

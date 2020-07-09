@@ -13,7 +13,7 @@
 <!--            <label style="color: #B3D0D8">____________________________</label>-->
             <el-input style="text-align: left; width: 66%;" v-model="input" placeholder="请输入服务名"></el-input>
             <el-button type="primary"
-                  @click.native="searchGoods(input)">
+                  @click="searchGoods(input)">
               搜索</el-button>
 <!--            <label style="color: #B3D0D8">________________________</label>-->
 <!--            <shopping-cart style="display:inline-block; text-align: center; font-size: 100%"></shopping-cart>-->
@@ -25,12 +25,12 @@
         </el-header>
 
         <el-main class="main">
-          <el-row v-for="(page, index) of pages ":key="index" >
+          <el-row v-for="(page, index) of pages " :key="index" >
             <el-col :span="4" v-for="(item, innerindex) of page" :key="item.spu_id" :offset="innerindex > 0 ? 2 : 1">
               <el-card :body-style="{ padding: '10px' }">
               <el-image :lazy='true' :src="item.spu_figure_url"
                 style="width: 280px; height: 220px;"
-                @click.native="goToGoods(item.spu_id)"
+                @click.native="goToGoods(item.spu_id === undefined ? item.id : item.spu_id)"
                 class="image">
               </el-image>
                 <div style="padding: 14px;">
@@ -171,7 +171,8 @@
 
 <style>
   .main {
-    background-color: #ff6700;
+    /*background-color: #ff6700;*/
+    background-color: rgba(128, 128, 128, 0.07);
   }
   .el-header {
     background-color: #B3D0D8;

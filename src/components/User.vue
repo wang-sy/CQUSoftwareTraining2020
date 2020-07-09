@@ -1,6 +1,9 @@
 <template>
   <div id="user_profile">
     <el-container class="user_container">
+      <div style="display: flex;justify-content: flex-end">
+        <login-plus-register></login-plus-register>
+      </div>
       <el-header class="profile_header">
         <div class="profile_header_center_container">
           <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
@@ -46,17 +49,17 @@
 <!--                <el-menu-item index="4">管理员状态申请</el-menu-item>-->
               </el-menu-item-group>
             </el-submenu>
+<!--            <el-submenu index="2">-->
+<!--              <template slot="title">-->
+<!--                <i class="el-icon-add-location">-->
+<!--                  地址信息-->
+<!--                </i>-->
+<!--              </template>-->
+<!--              <el-menu-item-group>-->
+<!--                <el-menu-item index="5">地址信息查询修改</el-menu-item>-->
+<!--              </el-menu-item-group>-->
+<!--            </el-submenu>-->
             <el-submenu index="2">
-              <template slot="title">
-                <i class="el-icon-add-location">
-                  地址信息
-                </i>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="5">地址信息查询修改</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-            <el-submenu index="3">
               <template slot="title">
                 <i class="el-icon-add-location">
                   历史订单
@@ -78,9 +81,10 @@
 
 <script>
     import UserInfoDetail from "./UserInfoDetail";
+    import LoginPlusRegister from "./LoginPlusRegister";
     export default {
       name:'User',
-      components: {UserInfoRevise: UserInfoDetail},
+      components: {LoginPlusRegister, UserInfoRevise: UserInfoDetail},
       data() {
         /*
         * 这个userid是tokenid哈
@@ -140,16 +144,17 @@
                 let realOrderId = (Array(16).join("0")+ (Number)(order.order_id)).slice(-16);
                 for (const subOrder of subOrderList) {
                   parsedSubOrderList.push({
-                    real_order_id: cnt++,
+                    real_order_id: "" + cnt++,
                     order_id: subOrder.sku_name,
                     order_total_price: subOrder.sku_total_price,
                     order_is_payed: order.order_is_payed
                   })
                 }
-                order.real_order_id = order.order_id;
+                order.real_order_id = order.order_id + "";
                 order.order_id = realOrderId;
                 order.sub_order_list = parsedSubOrderList;
               }
+              console.log(orderList);
               that.revise_type = targetRoute;
               that.historyOrderList = orderList;
             }).catch(_ => {
@@ -186,7 +191,7 @@
 
 <style scoped>
   .user_container {
-    background-color: rgb(247, 247, 247);
+    background-color: rgba(128, 128, 128, 0.05);
     height: 1024px;
   }
   .server_resp {
