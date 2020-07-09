@@ -3,14 +3,24 @@
     <el-row style="height: 60px;text-align: right;">
       <el-col :span="2">
         <el-button type="text" @click="popUpLoginForm" icon="el-icon-user-solid" class="profile_style">
-          登录/注册
+          <span v-if="!this.$store.getters.isLogin">{{header_tips}}</span>
+          <el-dropdown v-else @command="dropDownParser">
+            <span>
+              {{header_tips}}
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="gotoUserProfile">个人主页</el-dropdown-item>
+                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+          </el-dropdown>
         </el-button>
       </el-col>
     </el-row>
 
     <!--    登录/注册drawer-->
     <el-drawer
-      :visible.sync="isLoginDrawerShow"
+      :visible.sync="isLoginDrawerShow && !this.$store.getters.isLogin"
       size="36%">
       <el-tabs type="card">
         <el-tab-pane label="登录" name="login">
@@ -112,10 +122,20 @@
             this.$axios.post(uri, this.loginForm).then(res => {
               if (res.status >= 200 && res.status <= 300) {
                 let loginStatus = res.data.login_access;
-                let tokenId = res.data.token;
                 if (loginStatus === 1) {
                   that.$message.success("欢迎您！登录成功！");
-                  that.$store.commit('updateLoginToken',tokenId);
+                  let user = {user_name:res.data.user_nick_name,
+                    tokenId:res.data.token};
+                  //登录成功过后又获取用户信息一下
+                  that.$axios.get('/User/', {
+                    params:{
+                      token: res.data.token
+                    }
+                  }).then(res => {
+                    //获取邮箱
+                    user.user_email = res.data.user_email;
+                    that.$store.commit('updateUser', user);
+                  });
                 }else if (loginStatus === 0){
                   that.$message.error("用户名或者密码错误");
                 }else {
@@ -161,8 +181,24 @@
                 that.$parseError(error);
               }
             })
-          }
+          },
+          logout() {
+            this.$store.commit('deleteUser');
+            this.$message.success("注销成功");
+          },
+          dropDownParser(command) {
+            if (command === 'logout') {
+              this.logout();
+            }else {
+              this.$router.push("/user/" + this.$store.getters.getToken);
+            }
+          },
+        },
+      computed: {
+        header_tips() {
+          return this.$store.getters.isLogin === true ? this.$store.getters.getUsername : '登录/注册';
         }
+      }
     }
 </script>
 

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import fa from "element-ui/src/locale/lang/fa";
 
 Vue.use(Vuex);
 
@@ -15,10 +16,29 @@ const store=new Vuex.Store({
         number: 1
       }
     ],
-    tokenId: null
+    tokenId: null,
+    user: {
+      user_id:'',
+      user_email:'',
+      user_phonenumber: '',
+      user_nickname: '',
+      isLogin: false
+    }
   },
   // 实时监听state值的变化
   getters: {
+    getUser: state => {
+      console.log(JSON.parse(localStorage.getItem('user')))
+      return state.user.isLogin !== undefined && state.user.isLogin ? state.user :
+        JSON.parse(localStorage.getItem('user'));
+    },
+    getUsername: state => {
+      return state.user.isLogin !== undefined && state.user.isLogin === true ? state.user.user_name :
+        JSON.parse(localStorage.getItem("user")).user_name;
+    },
+    isLogin: state => {
+      return state.user.isLogin || localStorage.getItem("isLogin") === 'true';
+    },
     getToken: state => {
       return state.tokenId === null ? localStorage.getItem('tokenId') : state.tokenId;
     },
@@ -47,6 +67,22 @@ const store=new Vuex.Store({
   },
   // 改变state里的初始值 同步的
   mutations: {
+    updateUser(state, server_resp_user) {
+      console.log(server_resp_user);
+      state.user = server_resp_user;
+      state.user.isLogin = true;
+      state.tokenId = server_resp_user.tokenId;
+      localStorage.setItem("user", JSON.stringify(server_resp_user));
+      localStorage.setItem("isLogin", "true");
+      localStorage.setItem("tokenId", server_resp_user.tokenId);
+    },
+    deleteUser(state) {
+      state.user = {};
+      state.user.isLogin = false;
+      localStorage.removeItem("user");
+      localStorage.removeItem("isLogin");
+      this.state.tokenId = null;
+    },
     addCartItem(state, sku_id, number) {
       state.cartItems.push({sku_id, number});
       localStorage.setItem("sku_id", JSON.stringify({sku_id, number}));

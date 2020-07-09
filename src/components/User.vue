@@ -10,7 +10,7 @@
                 用户名:
               </span>
               <span class="server_resp">
-                {{server_resp.user_name}}
+                {{this.$store.getters.getUsername}}
               </span>
             </div>
             <div>
@@ -18,7 +18,7 @@
                 邮箱:
               </span>
               <span class="server_resp">
-                {{server_resp.user_email}}
+                {{this.$store.getters.getUser.user_email}}
               </span>
             </div>
             <div style="display: flex; justify-content: center">
@@ -43,7 +43,7 @@
                 <el-menu-item index="1">用户名</el-menu-item>
                 <el-menu-item index="2">密码</el-menu-item>
                 <el-menu-item index="3">邮箱</el-menu-item>
-                <el-menu-item index="4">管理员状态申请</el-menu-item>
+<!--                <el-menu-item index="4">管理员状态申请</el-menu-item>-->
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="2">
@@ -72,6 +72,9 @@
       name:'User',
       components: {UserInfoRevise},
       data() {
+        /*
+        * 这个userid是tokenid哈
+        * */
         return {
           user_id: '1',
           revise_type: 'undefined',
@@ -92,7 +95,26 @@
         }
       },
       mounted() {
-        this.user_id = this.$route.params.userId;
+        this.user_id = this.$route.params.tokenId;
+        let url = '/User/';
+        let that = this;
+        this.$axios.get(url, {
+          params: {
+            token: this.user_id
+          }
+        }).then(res => {
+          if (res.data.error === 0) {
+            let data = res.data;
+            that.server_resp = {
+              user_name: data.user_name,
+              user_email: data.user_email,
+              user_is_admin: data.user_is_admin,
+              user_phone_number: data.user_phone_number
+            };
+          }else {
+            that.$message.error("您没有权限访问此页面");
+          }
+        })
       }
     }
 </script>
@@ -122,7 +144,7 @@
     display: inline-block;
   }
   .profile_info {
-    width: 240px;
+    width: 360px;
     height: 100%;
     margin-left: 64px;
   }

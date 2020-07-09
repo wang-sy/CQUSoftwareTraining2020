@@ -5,19 +5,19 @@
       </h4>
       <div v-if="canShowSubTip">
         <h5 style="margin: 0">
-          您的当前{{computed_header}}:&nbsp;&nbsp;&nbsp;{{this.user_info[this.fieldMap[revise_type].serverField]}}
+          您的当前{{computed_header}}:&nbsp;&nbsp;&nbsp;{{computed_content}}
         </h5>
       </div>
       <div v-if="revise_type === 'password'">
-        <el-form :model="this.forms.passwordForm">
+        <el-form>
           <el-form-item label="旧密码">
-            <el-input v-model="this.forms.passwordForm.oldPassword"></el-input>
+            <el-input v-model="forms.passwordForm.old_password"></el-input>
           </el-form-item>
           <el-form-item label="新密码">
-            <el-input v-model="this.forms.passwordForm.newPassword"></el-input>
+            <el-input v-model="forms.passwordForm.new_password"></el-input>
           </el-form-item>
           <el-form-item class="submit_btn">
-            <el-button type="primary" @click="submitForms('passwordForm')">确认修改</el-button>
+            <el-button type="primary" @click="submitForms('passwordForm', fieldMap[revise_type].request_type)">确认修改</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -29,7 +29,7 @@
             </el-input>
           </el-form-item>
           <el-form-item class="submit_btn">
-            <el-button type="primary" @click="submitForms('normalForm')">
+            <el-button type="primary" @click="submitForms('normalForm', fieldMap[revise_type].request_type)">
               确认修改
             </el-button>
           </el-form-item>
@@ -57,48 +57,65 @@
           fieldMap : {
             username : {
               fieldName : '用户名',
-              serverField : 'user_name'
+              serverField : 'new_user_name',
+              vuex_field: 'user_name',
+              request_type: 5
             },
             password : {
               fieldName : '密码',
-              serverField : 'user_password'
+              serverField : 'user_password',
+              request_type: 7
             },
             email : {
               fieldName : '邮箱',
-              serverField : 'user_email'
+              serverField : 'new_email',
+              request_type: 6,
+              vuex_field: 'user_email'
             },
             undefined: {
               fieldName : '请从左侧菜单中选择一项'
             },
-            admin: {
-              fieldName : '管理员状态申请',
-              serverField : 'admin_apply'
-            },
+            // admin: {
+            //   fieldName : '管理员状态申请',
+            //   serverField : 'admin_apply'
+            // },
             address: {
               fieldName : '地址信息'
             }
           },
           forms: {
             passwordForm: {
-              oldPassword:'',
-              newPassword:''
+              old_password:'',
+              new_password:''
             },
             normalForm: {
               user_name:'',
-              user_email:''
+              user_email:'',
+              request_type: 1
             },
           }
         }
       },
       methods: {
-        submitForms(formId) {
+        submitForms(formId, request_type) {
           let submitForm = this.forms[formId];
-          let url = '/user/config';
+          console.log(submitForm);
+          submitForm.request_type = request_type;
+          let url = '/User/?token=' + this.$store.getters.getToken;
           let that = this;
           this.$axios.post(url, submitForm).then(res => {
             let data = res.data;
-            if (data.error_code === 0) {
+            if (data.error === 0) {
               that.$message.success("成功修改信息!");
+              that.$axios.get("/User/", {
+                params: {
+                  token: that.$store.getters.getToken
+                }
+              }).then(result => {
+                console.log({user_name:result.data.user_name, tokenId:that.$store.getters.getToken});
+                that.$store.commit('updateUser', {user_name:result.data.user_name,
+                  tokenId:that.$store.getters.getToken, user_email: result.data.user_email});
+              })
             }else {
               that.$message.error("修改信息失败");
             }
@@ -116,6 +133,9 @@
         },
         computed_common_label() {
           return "请输入您的新" + this.fieldMap[this.revise_type].fieldName + ":";
+        },
+        computed_content() {
+          return this.$store.getters.getUser[this.fieldMap[this.revise_type].vuex_field];
         }
       }
     }

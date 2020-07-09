@@ -63,7 +63,7 @@ export default new Router({
     },
     {
       name: 'user',
-      path: '/user/:userId',
+      path: '/user/:tokenId',
       component: User,
       children: [
         {
