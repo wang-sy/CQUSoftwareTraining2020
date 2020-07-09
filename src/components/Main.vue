@@ -9,27 +9,16 @@
           <i class="el-icon-eleme"></i>
           <label style="color: #B3D0D8">____________________________</label>
           <el-input style="text-align: left; width: 1000px;" v-model="input" placeholder="请输入服务名"></el-input>
-          <el-button type="primary">搜索</el-button>
+          <el-button type="primary"
+                @click.native="searchGoods(input)">
+            搜索</el-button>
           <label style="color: #B3D0D8">________________________</label>
           <shopping-cart style="display:inline-block; text-align: center; font-size: 100%"></shopping-cart>
           <label style="color: #B3D0D8">____________</label>
           <login-plus-register style="display:inline-block; text-align: center"></login-plus-register>
         </el-header>
 
-        <el-main>
-<!--        <el-table :data="showData = showAllData ? tableData : tableData.filter(item => item.class_name === showClass)">-->
-<!--          <el-table-column prop="spu_figure_url" label="    " min-width="40%" >-->
-<!--            <template slot-scope="scope">-->
-<!--              <el-image :lazy='true' :src="scope.row.spu_figure_url"-->
-<!--                style="width: 50px; height: 50px" @click="goToGoods(scope.row.spu_id)">-->
-<!--              </el-image>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column prop="spu_name" label="名称" min-width="40%">-->
-<!--          </el-table-column>-->
-<!--          <el-table-column prop="spu_lowest_price" label="价格">-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
+        <el-main class="main">
           <el-row v-for="(page, index) of pages ":key="index" >
             <el-col :span="4" v-for="(item, innerindex) of page" :key="item.spu_id" :offset="innerindex > 0 ? 2 : 1">
               <el-card :body-style="{ padding: '10px' }">
@@ -72,6 +61,7 @@
       let tableData = [];
       return {
         showClass,
+        showSearch: false,
         showAllData: true,
         input: '',
         tableData:[{
@@ -94,17 +84,29 @@
     },
     mounted() {
       this.initial()
+      this.selectShow()
     },
     methods: {
       goToGoods(idx, event) {
-        console.log(1)
-        console.log(idx)
         this.$router.push({
               name:'productDetail',
               params: {
                 productID:idx
               }
         })
+      },
+      searchGoods(input, event) {
+        this.showSearch = true;
+        let that = this;
+        this.$axios.get('http://www.wangsaiyu.cn:20001/Search/',{
+          params:{
+            spu_name__icontains: input
+          }
+        }).then(res => {
+          if (res.status >= 200 && res.status < 300) {
+            that.showData = res.data;
+          }
+        });
       },
       changShowClass(idx) {
         if( idx === '1') {
@@ -114,11 +116,25 @@
         if( idx === '2') this.showClass = '搬家服务'
         if( idx === '3') this.showClass = '保洁/驱虫'
         if( idx === '4') this.showClass = '保姆/月嫂'
+        this.selectShow()
+      },
+      selectShow() {
+        this.showData = this.showAllData ? this.tableData : this.tableData.filter(item => item.class_name === this.showClass);
+        this.shuffle(this.showData)
+      },
+      shuffle(arr) {
+          for (let i=arr.length-1; i>=0; i--) {
+              let rIndex = Math.floor(Math.random()*(i+1));
+              // 打印交换值
+              // console.log(i, rIndex);
+              let temp = arr[rIndex];
+              arr[rIndex] = arr[i];
+              arr[i] = temp;
+          }
+          return arr;
       },
       initial() {
         let that = this;
-        let url = "/";
-        let a = []
         this.$axios.get('http://www.wangsaiyu.cn:20001/Product/',{
           params:{
             product_get_format: '1'
@@ -126,7 +142,7 @@
         }).then(res => {
           if (res.status >= 200 && res.status < 300) {
             that.tableData = res.data;
-            a = res.data;
+            this.showData = res.data;
           }
         });
       }
@@ -134,14 +150,13 @@
     computed: {
       pages() {
         const pages = []
-        this.tableData.forEach((item, index) => {
+        this.showData.forEach((item, index) => {
           const page = Math.floor(index / 4)
           if (!pages[page]) {
             pages[page] = []
           }
           pages[page].push(item)
         })
-        console.log(pages)
         return pages
       }
     }
@@ -149,6 +164,9 @@
 </script>
 
 <style>
+  .main {
+    background-color: #ff6700;
+  }
   .el-header {
     background-color: #B3D0D8;
     color: #333;
@@ -157,6 +175,13 @@
 
   .el-aside {
     color: #333;
+  }
+
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
   .el-card {
     min-width: 250px;
