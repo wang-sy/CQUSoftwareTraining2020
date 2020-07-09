@@ -8,7 +8,7 @@ import VueAreaLinkage from 'vue-area-linkage';
 import router from './router/index';
 import store from './store/index';
 let globalAxiosInstance = Axios.create({
-  baseURL:'http://www.wangsaiyu.cn:20001'
+  baseURL:'http://api.wangsaiyu.cn'
 });
 
 globalAxiosInstance.interceptors.request.use(config => {

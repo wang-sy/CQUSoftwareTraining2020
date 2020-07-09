@@ -141,7 +141,7 @@
       },
       initial() {
         let that = this;
-        this.$axios.get('http://www.wangsaiyu.cn:20001/Product/',{
+        this.$axios.get('/Product/',{
           params:{
             product_get_format: '1'
           }

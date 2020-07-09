@@ -8,7 +8,7 @@ import ProductDetail from "../components/ProductDetail";
 import Main from "../components/Main";
 import Data from "../components/Data";
 import User from "../components/User";
-import UserInfoRevise from "../components/UserInfoRevise";
+import UserInfoRevise from "../components/UserInfoDetail";
 Vue.use(Router)
 
 export default new Router({

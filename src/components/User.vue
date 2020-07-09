@@ -56,10 +56,20 @@
                 <el-menu-item index="5">地址信息查询修改</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="3">
+              <template slot="title">
+                <i class="el-icon-add-location">
+                  历史订单
+                </i>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="6">历史订单信息查询</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </div>
         <div id="user_right">
-          <UserInfoRevise :revise_type="revise_type" :user_info="this.server_resp"></UserInfoRevise>
+          <UserInfoRevise :history_order_list="historyOrderList" :revise_type="revise_type" :user_info="this.server_resp"></UserInfoRevise>
         </div>
       </el-main>
     </el-container>
@@ -67,10 +77,10 @@
 </template>
 
 <script>
-    import UserInfoRevise from "./UserInfoRevise";
+    import UserInfoDetail from "./UserInfoDetail";
     export default {
       name:'User',
-      components: {UserInfoRevise},
+      components: {UserInfoRevise: UserInfoDetail},
       data() {
         /*
         * 这个userid是tokenid哈
@@ -85,13 +95,68 @@
             user_password: '',
             user_is_admin: ''
           },
-          routeArray:['username','password','email','admin','address']
+          historyOrderList:[
+            {
+              order_id:'没有信息',
+              order_create_time: 'asdasd',
+              order_is_payed:false,
+              order_pay_method: '支付宝',
+              order_total_price: 11,
+              order_tip: 1,
+              sub_order_list:[
+                {
+                  // sku_name: '',
+                  // sku_unit_price: 1,
+                  // sku_num: 2,
+                  // sku_total_price:123,
+                  order_id: '个人搬家'
+                }
+              ],
+              has_sub_order_list: false
+            }
+          ],
+          routeArray:['username','password','email','admin','address','history_orders']
         }
       },
       methods: {
         logWhatever(index) {
-          this.revise_type = this.routeArray[index - '1'];
-          // this.$router.push("/user/" + this.user_id + "/revise");
+          let targetRoute = this.routeArray[index - '1'];
+          let that = this;
+          if (targetRoute === 'history_orders') {
+            //取得历史订单信息
+            this.$axios.get('/Order', {
+              params: {
+                user_token: this.$store.getters.getToken,
+                request_type: 1
+              }
+            }).then(res => {
+              //处理orderList的子订单
+              let orderList = res.data;
+              //这个cnt用来作为sku的id给table渲染
+              let cnt = 0x3ffff;
+              for (const order of orderList) {
+                let parsedSubOrderList = [];
+                let subOrderList = order.sub_order_list;
+                let realOrderId = (Array(16).join("0")+ (Number)(order.order_id)).slice(-16);
+                for (const subOrder of subOrderList) {
+                  parsedSubOrderList.push({
+                    real_order_id: cnt++,
+                    order_id: subOrder.sku_name,
+                    order_total_price: subOrder.sku_total_price,
+                    order_is_payed: order.order_is_payed
+                  })
+                }
+                order.real_order_id = order.order_id;
+                order.order_id = realOrderId;
+                order.sub_order_list = parsedSubOrderList;
+              }
+              that.revise_type = targetRoute;
+              that.historyOrderList = orderList;
+            }).catch(_ => {
+              that.$message.error("发生错误，请稍后重试");
+            })
+          }
+          this.revise_type = targetRoute;
         }
       },
       mounted() {
@@ -169,11 +234,12 @@
     width: 90vw;
     flex-flow: row nowrap;
   }
-  #user_left, #user_right{
-    width: 50%;
+  #user_left{
+    width: 30%;
     height: 100%;
   }
   #user_right {
+    width: 70%;
     margin-left: 16px;
   }
 </style>

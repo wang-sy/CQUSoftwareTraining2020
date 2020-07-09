@@ -26,7 +26,7 @@
       <el-tabs type="card">
         <el-tab-pane label="登录" name="login">
           <el-form :model="loginForm" label-width="128px">
-            <el-form-item label="账号">
+            <el-form-item label="手机号">
               <el-input v-model="loginForm.user_account">
 
               </el-input>
