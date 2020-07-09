@@ -28,7 +28,7 @@
             }
             /*gotoOtherPage(){
                 if( Number(this.input)=== 1 || Number(this.input) === 2){
-                    let url= "https://www.leetechweb.cn:8443/school.project4/course/find-all";
+                    let url= "www.wangsy.cn:200001/Uesr";
                     let that=this;
                     this.$axios.post(url,{"input":that.input}).then(function(object) {
                         let code = object.data.retCode;
