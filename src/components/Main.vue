@@ -5,17 +5,23 @@
       <class-sider @menu_index="changShowClass"></class-sider>
 
       <el-container>
-        <el-header style="text-align: center; font-size: 12px; height: 60px">
-          <i class="el-icon-eleme"></i>
-          <label style="color: #B3D0D8">____________________________</label>
-          <el-input style="text-align: left; width: 1000px;" v-model="input" placeholder="请输入服务名"></el-input>
-          <el-button type="primary"
-                @click.native="searchGoods(input)">
-            搜索</el-button>
-          <label style="color: #B3D0D8">________________________</label>
-          <shopping-cart style="display:inline-block; text-align: center; font-size: 100%"></shopping-cart>
-          <label style="color: #B3D0D8">____________</label>
-          <login-plus-register style="display:inline-block; text-align: center"></login-plus-register>
+        <el-header style="display: flex;flex-flow: nowrap row">
+          <div style="flex: 1;display: flex;align-items: center;justify-content: center">
+            <i class="el-icon-eleme" style="width: 40%;height: 30%"></i>
+          </div>
+          <div style="flex: 14; display: flex; align-items: center;justify-content: center">
+<!--            <label style="color: #B3D0D8">____________________________</label>-->
+            <el-input style="text-align: left; width: 66%;" v-model="input" placeholder="请输入服务名"></el-input>
+            <el-button type="primary"
+                  @click.native="searchGoods(input)">
+              搜索</el-button>
+<!--            <label style="color: #B3D0D8">________________________</label>-->
+<!--            <shopping-cart style="display:inline-block; text-align: center; font-size: 100%"></shopping-cart>-->
+            <label style="color: #B3D0D8">____________</label>
+          </div>
+          <div style="flex: 1;display: flex; align-items: center;justify-content: center">
+            <login-plus-register style="display:inline-block; text-align: center"></login-plus-register>
+          </div>
         </el-header>
 
         <el-main class="main">
@@ -170,7 +176,7 @@
   .el-header {
     background-color: #B3D0D8;
     color: #333;
-    line-height: 60px;
+    /*line-height: 60px;*/
   }
 
   .el-aside {

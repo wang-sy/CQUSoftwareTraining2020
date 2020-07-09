@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="buyButtonSection medium_margin_top">
-                      <el-button type="primary" icon="el-icon-shopping-bag-2">立即购买</el-button>
+                      <el-button type="primary" icon="el-icon-shopping-bag-2" @click="buyNow">立即购买</el-button>
                       <el-button type="primary" icon="el-icon-shopping-cart-2" @click="addToCart" ref="cart">加入购物车</el-button>
                     </div>
                   </el-form>
@@ -185,6 +185,27 @@
       addToCart() {
         let current = this.getCurrentSelectedTarget();
         this.$refs.cart.addItemToCart(current.sku_id, this.productForm.num);
+      },
+      buyNow() {
+        let currentSkuId = this.getCurrentSelectedTarget().sku_id;
+        //重新写一个form，不用productForm了，用一下productForm上的num属性作为购买的数量
+        let num = this.productForm.num;
+        let requestForm = {
+          request_type: 1,
+          user_phone_number: this.$store.getters.getUser.user_phone_number,
+          sku_list:[
+            {sku_id:currentSkuId, number: num}
+          ]
+        };
+        let that = this;
+        this.$axios.post('/Order/', requestForm).then(res => {
+          that.$router.push({
+            name:'PayPage',
+            params: {
+              orderId:res.data.order_id
+            }
+          });
+        })
       }
     },
     computed: {
