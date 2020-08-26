@@ -1,3 +1,8 @@
+# 特殊声明
+
+该仓库是小组的前端仓库，我并没有参与到前端的开发中，我负责的是该项目的后端开发，如果想要阅读后端代码，请移步至：
+https://gitee.com/saiyuwang/CQUSoftwareTraining2020Back
+
 <<<<<<< HEAD
 # vue_js_project
 
